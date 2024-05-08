@@ -146,6 +146,54 @@ class Tree23 {
       }
    }
 
+   public void delete(long dValue){
+      Node curNode = root;
+      Node sibNode = getNextChild(curNode, dValue);
+      Node parNode = curNode.getParent();
+      Node chiNode = parNode.getChild(0);
+      Node left = null;
+      Node right = null;
+
+      while (true) {
+         if (curNode.isLeaf())
+            break;
+         else
+            curNode = getNextChild(curNode, dValue);
+      }
+      // Key pada leaf node yang penuh
+      if (curNode.isFull()) {
+         curNode.removeItem();
+      }
+      // Key pada leaf node yang tidak penuh, sibling node penuh
+      else {
+         while (true) {
+         if (sibNode.isLeaf())
+            break;
+         else
+            sibNode = getNextChild(curNode, dValue);
+      }
+         if (sibNode == null) {
+            parNode = curNode.getParent();
+            curNode = parNode;
+            parNode.removeItem();
+            parNode = parNode.connectChild(0, sibNode);
+         }
+   
+      // Key pada leaf node yang tidak penuh, sibling node tidak penuh
+         else if (sibNode != null) {
+            parNode = curNode.getParent();
+            curNode = parNode;
+            parNode.removeItem();
+            if (parNode == null) {
+               parNode = parNode.getChild(0);
+            }
+            else if (left == null) {
+               chiNode = parNode.getChild(0);
+               parNode = parNode.connectChild(0, chiNode);
+            }
+         }
+      }
+   }
    public void split(Node thisNode) {
       DataItem itemB, itemC;
       Node parent, child2, child3;
